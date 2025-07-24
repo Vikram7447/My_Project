@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ entry.title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>{{ entry.title }}</h1>
+    <p><strong>Mood:</strong> {{ entry.mood }}</p>
+    <p><strong>Date:</strong> {{ entry.created_at }}</p>
+    <p>{{ entry.content }}</p>
+    <a href="{{ url_for('journal') }}">Back to Journal</a>
+</body>
+</html>

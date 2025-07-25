@@ -1,7 +1,27 @@
 body {
-    background-color: #f0f8ff;
     font-family: Arial, sans-serif;
+    background-color: #eaf4fc;
+    text-align: center;
+    padding: 20px;
 }
-h1 {
-    color: #0077cc;
+
+a {
+    text-decoration: none;
+    color: #007BFF;
+    margin: 0 5px;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+
+.flash.success { color: green; }
+.flash.danger { color: red; }
+.flash.info { color: blue; }
+
+img {
+    margin-top: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }

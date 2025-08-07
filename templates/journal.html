@@ -6,15 +6,26 @@
 </head>
 <body>
     <h1>Journal Entries</h1>
-    <a href="{{ url_for('new_journal') }}">+ New Entry</a>
-    <ul>
-        {% for entry in entries %}
-            <li>
-                <a href="{{ url_for('view_entry', entry_id=entry.id) }}">{{ entry.title }}</a> ({{ entry.mood or 'Unknown mood' }})
-                <a href="{{ url_for('delete_entry_route', entry_id=entry.id) }}">[Delete]</a>
-            </li>
-        {% endfor %}
-    </ul>
+
+    <a href="{{ url_for('new_journal') }}">+ Add New Entry</a>
+
+    {% if entries %}
+        <ul>
+            {% for entry in entries %}
+                <li>
+                    <h3>{{ entry.title }}</h3>
+                    <p>Mood: {{ entry.mood or 'Unknown' }}</p>
+                    <a href="{{ url_for('view_entry', entry_id=entry.id) }}">View</a>
+                    <form action="{{ url_for('delete_entry', entry_id=entry.id) }}" method="post" style="display:inline;">
+                    <button type="submit">Delete</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No journal entries yet.</p>
+    {% endif %}
+
     <a href="/">Home</a>
 </body>
 </html>

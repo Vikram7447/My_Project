@@ -1,23 +1,18 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
-from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import scoped_session, sessionmaker
-from models.database import Base, engine, JournalEntry, User, SessionLocal
+from models.database import Base, engine, JournalEntry, User
 from utils.helpers import get_current_timestamp, sanitize_input
 from chatbot.chatbot_engine import get_bot_response
+import os
 
 # Flask app setup
 app = Flask(__name__)
-app.secret_key = 'your_secret_key_here'  # Replace with a secure key
-
-# SQLAlchemy config
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///journal.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+app.secret_key = os.getenv("SECRET_KEY", "fallback_secret_key")  # Secure key from env
 
 # SQLAlchemy session
-session_factory = sessionmaker(bind=engine)
+session_factory = sessionmaker(bind=engine, expire_on_commit=False)
 Session = scoped_session(session_factory)
 session = Session()
 
@@ -29,7 +24,7 @@ login_manager.login_view = 'login'
 # User loader
 @login_manager.user_loader
 def load_user(user_id):
-    return session.query(User).get(int(user_id))
+    return session.get(User, int(user_id))
 
 # ---------------- ROUTES ----------------
 
@@ -40,7 +35,7 @@ def home():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form['username']
+        username = sanitize_input(request.form['username'])
         password = request.form['password']
 
         existing_user = session.query(User).filter_by(username=username).first()
@@ -60,7 +55,7 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
+        username = sanitize_input(request.form['username'])
         password = request.form['password']
 
         user = session.query(User).filter_by(username=username).first()
@@ -93,7 +88,6 @@ def about():
 def contact():
     return render_template('contact.html')
 
-# ---------------- Journal Routes ----------------
 # ---------------- Journal Routes ----------------
 
 @app.route('/journal')
@@ -140,8 +134,6 @@ def delete_entry(entry_id):
         flash("Entry not found or access denied.", "danger")
     return redirect(url_for('journal'))
 
-
-
 # ---------------- Chatbot Route ----------------
 
 @app.route('/chatbot', methods=['GET', 'POST'])
@@ -149,9 +141,14 @@ def delete_entry(entry_id):
 def chatbot():
     bot_response = None
     if request.method == 'POST':
-        user_input = request.form['user_input']
+        user_input = sanitize_input(request.form['user_input'])
         bot_response = get_bot_response(user_input)
     return render_template('chatbot.html', bot_response=bot_response)
+
+# ---------------- Cleanup ----------------
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    Session.remove()
 
 # ---------------- MAIN ----------------
 

@@ -1,19 +1,19 @@
-# chatbot/chatbot_engine.py
+from emotion_classifier import predict_emotion
 
 def get_bot_response(user_input):
-    user_input = user_input.lower()
+    emotion, confidence = predict_emotion(user_input)
 
-    if "sad" in user_input or "depressed" in user_input:
-        return "I'm sorry you're feeling that way. Remember, you're not alone. Talking to a friend or journaling might help."
+    if emotion in ["sadness", "grief", "remorse"]:
+        return f"I sense you may be feeling {emotion}. That sounds heavy 💙. You're not alone — would you like to talk more about it?"
 
-    elif "happy" in user_input or "good" in user_input:
-        return "That's wonderful to hear! Keep spreading the positivity."
+    elif emotion in ["joy", "excitement", "love", "pride"]:
+        return f"That's wonderful! I'm glad you're feeling {emotion} 🌸."
 
-    elif "stress" in user_input or "anxious" in user_input:
-        return "Stress is tough. Try taking deep breaths, journaling, or going for a walk."
+    elif emotion in ["fear", "nervousness"]:
+        return f"It seems like you're experiencing {emotion}. Try deep breathing, journaling, or reaching out to someone you trust."
 
-    elif "help" in user_input:
-        return "You can write about your thoughts in the journal or reach out to a mental health professional."
+    elif emotion in ["anger", "annoyance", "disapproval"]:
+        return f"It looks like you're feeling {emotion}. It’s okay to feel this way — maybe writing it out in your journal could help."
 
     else:
-        return "I'm here to listen. Tell me more about how you're feeling."
+        return f"I hear you. It seems like you might be experiencing {emotion}. I'm here to listen — tell me more."

@@ -1,25 +1,100 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #eaf4fc;
+    margin: 0;
+    padding: 0;
+}
+
+/* Navigation Bar */
+nav {
+    background-color: #007BFF;
+    padding: 10px;
     text-align: center;
-    padding: 20px;
 }
 
-a {
+nav a {
     text-decoration: none;
-    color: #007BFF;
-    margin: 0 5px;
+    color: white;
+    margin: 0 15px;
+    font-weight: bold;
 }
 
-a:hover {
+nav a:hover {
     text-decoration: underline;
-    color: #0056b3;
+    color: #ffeb3b;
 }
 
+/* Flash Messages */
 .flash.success { color: green; }
 .flash.danger { color: red; }
 .flash.info { color: blue; }
 
+/* Journal Entry Card */
+.entry-card {
+    background: white;
+    margin: 15px auto;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    max-width: 600px;
+    text-align: left;
+}
+
+/* Chatbot Styles */
+#chatbox {
+    max-width: 600px;
+    margin: 20px auto;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    height: 400px;
+    overflow-y: auto;
+}
+
+.message {
+    margin: 8px 0;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 70%;
+}
+
+.user-message {
+    background: #007BFF;
+    color: white;
+    margin-left: auto;
+    text-align: right;
+}
+
+.bot-message {
+    background: #f1f1f1;
+    color: black;
+    margin-right: auto;
+    text-align: left;
+}
+
+/* Input box for chatbot */
+#chat-input {
+    width: 80%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+#send-btn {
+    padding: 10px 15px;
+    border: none;
+    background: #007BFF;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#send-btn:hover {
+    background: #0056b3;
+}
+
+/* Images */
 img {
     margin-top: 10px;
     border-radius: 10px;

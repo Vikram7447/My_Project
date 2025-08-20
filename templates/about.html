@@ -1,13 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>About</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Mental Health Journal</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </head>
 <body>
-    <h1>About Us</h1>
-    <p>This is the about page.</p>
-    <a href="/">Home</a> | <a href="/contact">Contact</a>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="/">Home</a>
+        <a href="/journal">Journal</a>
+        <a href="/chatbot">Chatbot</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+    </nav>
+
+    <div class="entry-card">
+        <h1>About Us</h1>
+        <p>
+            Welcome to the <strong>Mental Health Journal & Chatbot</strong> project.  
+            This platform is designed to support your emotional well-being by offering:
+        </p>
+
+        <ul>
+            <li>📝 A safe space to write and reflect through journaling.</li>
+            <li>🤖 An empathetic AI chatbot that listens and responds supportively.</li>
+            <li>📊 Mood detection powered by <em>GoEmotions</em> to help you track your emotions.</li>
+            <li>🔒 Secure login & encryption to protect your personal entries.</li>
+        </ul>
+
+        <p>
+            Our goal is to encourage mindfulness, reduce stress, and promote emotional health.  
+            Remember, you are not alone — journaling and talking can make a difference. 💙
+        </p>
+    </div>
+
 </body>
 </html>

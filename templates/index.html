@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Home</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
@@ -14,11 +15,12 @@
 
         nav {
             background-color: #dbeeff;
-            padding: 10px;
+            padding: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         nav a {
-            margin: 0 10px;
+            margin: 0 12px;
             text-decoration: none;
             color: #004080;
             font-weight: bold;
@@ -35,29 +37,43 @@
             border-radius: 5px;
         }
 
-        .success {
-            background-color: #d4edda;
-            color: #155724;
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+
+        .hero {
+            margin: 40px auto;
+            max-width: 800px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-
-        .info {
-            background-color: #d1ecf1;
-            color: #0c5460;
-        }
-
-        img {
+        .hero img {
             margin-top: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
-        .welcome {
-            margin-top: 20px;
+        .cta-buttons {
+            margin-top: 25px;
+        }
+
+        .cta-buttons a {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 12px 18px;
+            background: #007BFF;
+            color: white;
+            font-weight: bold;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .cta-buttons a:hover {
+            background: #0056b3;
         }
 
         .journal-links {
@@ -68,6 +84,11 @@
             margin: 0 10px;
             font-weight: bold;
             color: darkgreen;
+            text-decoration: none;
+        }
+
+        .journal-links a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -84,33 +105,43 @@
 
     <!-- Navigation -->
     <nav>
-        <a href="{{ url_for('home') }}">Home</a> |
-        <a href="{{ url_for('about') }}">About</a> |
-        <a href="{{ url_for('contact') }}">Contact</a> |
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('about') }}">About</a>
+        <a href="{{ url_for('contact') }}">Contact</a>
         {% if current_user.is_authenticated %}
-            <a href="{{ url_for('dashboard') }}">Dashboard</a> |
-            <a href="{{ url_for('journal') }}">Journal</a> |
-            <a href="{{ url_for('new_journal') }}">New Entry</a> |
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('journal') }}">Journal</a>
+            <a href="{{ url_for('new_journal') }}">New Entry</a>
             <a href="{{ url_for('logout') }}">Logout</a>
         {% else %}
-            <a href="{{ url_for('login') }}">Login</a> |
+            <a href="{{ url_for('login') }}">Login</a>
             <a href="{{ url_for('register') }}">Register</a>
         {% endif %}
     </nav>
 
-    <!-- Main content -->
-    <div class="welcome">
-        <h1>Welcome to Home Page</h1>
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>Welcome to Your Mental Health Companion 💙</h1>
+        <p>Your personal AI-powered journal and chatbot to support emotional well-being.</p>
         <img src="{{ url_for('static', filename='images/example.jpg') }}" alt="Example Image" width="300">
-        <p>Your personal AI-powered mental health journal and emotional companion.</p>
+
+        <div class="cta-buttons">
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('dashboard') }}">Go to Dashboard</a>
+                <a href="{{ url_for('new_journal') }}">Write New Entry</a>
+            {% else %}
+                <a href="{{ url_for('register') }}">Get Started</a>
+                <a href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+        </div>
     </div>
 
     {% if current_user.is_authenticated %}
         <div class="journal-links">
             <p>
-                Go to your 
-                <a href="{{ url_for('journal') }}">Journal</a> or 
-                <a href="{{ url_for('new_journal') }}">Write a New Entry</a>.
+                Quick access: 
+                <a href="{{ url_for('journal') }}">My Journal</a> | 
+                <a href="{{ url_for('chatbot') }}">Chatbot</a>
             </p>
         </div>
     {% endif %}

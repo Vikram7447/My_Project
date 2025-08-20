@@ -1,13 +1,90 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <style>
+        .contact-container {
+            max-width: 600px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+
+        .contact-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .contact-container form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        input, textarea {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            resize: none;
+        }
+
+        button {
+            padding: 12px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .info {
+            margin-top: 20px;
+            text-align: center;
+            color: #555;
+        }
+
+        nav {
+            margin: 20px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <h1>Contact Page</h1>
-    <p>Reach out to us at: contact@example.com</p>
-    <a href="/">Home</a> | <a href="/about">About</a>
+
+    <!-- Navbar -->
+    <nav>
+        <a href="/">Home</a> |
+        <a href="/journal">Journal</a> |
+        <a href="/chatbot">Chatbot</a> |
+        <a href="/about">About</a> |
+        <a href="/contact">Contact</a>
+    </nav>
+
+    <div class="contact-container">
+        <h2>📬 Contact Us</h2>
+        <form method="POST" action="/contact">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <textarea name="message" rows="4" placeholder="Your Message" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+
+        <div class="info">
+            <p>Or reach us directly at: <strong>contact@example.com</strong></p>
+        </div>
+    </div>
+
 </body>
 </html>

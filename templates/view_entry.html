@@ -1,14 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>{{ entry.title }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <h1>{{ entry.title }}</h1>
-    <p><strong>Mood:</strong> {{ entry.mood }}</p>
-    <p><strong>Date:</strong> {{ entry.created_at }}</p>
+
+    <p><strong>Mood:</strong> {{ entry.mood or "Not specified" }}</p>
+    <p><strong>Date:</strong> {{ entry.created_at.strftime("%B %d, %Y %I:%M %p") if entry.created_at else "Unknown" }}</p>
+
+    <hr>
+
+    <h3>Your Thoughts</h3>
     <p>{{ entry.content }}</p>
-    <a href="{{ url_for('journal') }}">Back to Journal</a>
+
+    <br>
+    <a href="{{ url_for('journal') }}">← Back to Journal</a>
 </body>
 </html>

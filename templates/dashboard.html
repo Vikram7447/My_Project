@@ -4,10 +4,82 @@
     <meta charset="UTF-8">
     <title>Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eaf4fc;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card a {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 15px;
+            background: #007BFF;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+        }
+
+        .card a:hover {
+            background: #0056b3;
+        }
+
+        .logout {
+            margin-top: 30px;
+        }
+    </style>
 </head>
 <body>
     <h1>Welcome, {{ user }}!</h1>
-    <p>This is your dashboard. You are logged in.</p>
-    <a href="{{ url_for('logout') }}">Logout</a>
+    <p>This is your personal dashboard.</p>
+
+    <div class="dashboard-container">
+        <div class="card">
+            <h2>📓 Journal</h2>
+            <p>Write and reflect on your thoughts.</p>
+            <a href="{{ url_for('journal') }}">Go to Journal</a>
+        </div>
+
+        <div class="card">
+            <h2>🤖 Chatbot</h2>
+            <p>Talk with your AI emotional companion.</p>
+            <a href="{{ url_for('chatbot') }}">Chat Now</a>
+        </div>
+
+        <div class="card">
+            <h2>📊 Mood Tracker</h2>
+            <p>Visualize your emotional trends.</p>
+            <a href="{{ url_for('mood_tracker') }}">View Insights</a>
+        </div>
+    </div>
+
+    <div class="logout">
+        <a href="{{ url_for('logout') }}">🚪 Logout</a>
+    </div>
 </body>
 </html>

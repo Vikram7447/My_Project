@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>New Journal Entry</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -8,25 +9,40 @@
     <h1>Create New Journal Entry</h1>
 
     <form method="POST">
-        <label for="title">Title:</label><br>
-        <input type="text" id="title" name="title" placeholder="Title" required><br><br>
+        <!-- Title -->
+        <div>
+            <label for="title">Title:</label><br>
+            <input type="text" id="title" name="title" placeholder="Enter a title" required>
+        </div>
+        <br>
 
-        <label for="content">Your Thoughts:</label><br>
-        <textarea id="content" name="content" placeholder="Write your thoughts here..." rows="6" required></textarea><br><br>
+        <!-- Content -->
+        <div>
+            <label for="content">Your Thoughts:</label><br>
+            <textarea id="content" name="content" placeholder="Write your thoughts here..." rows="6" required></textarea>
+        </div>
+        <br>
 
-        <label for="mood">Mood:</label><br>
-        <select id="mood" name="mood">
-            <option value="">-- Select Mood --</option>
-            <option value="happy">😊 Happy</option>
-            <option value="sad">😢 Sad</option>
-            <option value="anxious">😟 Anxious</option>
-            <option value="angry">😠 Angry</option>
-        </select><br><br>
+        <!-- Mood -->
+        <div>
+            <label for="mood">Mood:</label><br>
+            <select id="mood" name="mood">
+                <option value="">-- Select Mood --</option>
+                <option value="happy">😊 Happy</option>
+                <option value="sad">😢 Sad</option>
+                <option value="anxious">😟 Anxious</option>
+                <option value="angry">😠 Angry</option>
+                <option value="excited">🤩 Excited</option>
+                <option value="tired">😴 Tired</option>
+                <option value="calm">😌 Calm</option>
+            </select>
+        </div>
+        <br>
 
+        <!-- Submit -->
         <button type="submit">Save Entry</button>
     </form>
 
-    <br>
-    <a href="{{ url_for('journal') }}">← Back to Journal</a>
+    <p><a href="{{ url_for('journal') }}">← Back to Journal</a></p>
 </body>
 </html>

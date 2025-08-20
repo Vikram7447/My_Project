@@ -6,21 +6,41 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h2>Register</h2>
+    <h2>Create an Account</h2>
+
+    <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% for category, message in messages %}
         <p class="flash {{ category }}">{{ message }}</p>
       {% endfor %}
     {% endwith %}
-    <form method="POST" action="{{ url_for('register') }}">
-        <label for="username">Username:</label>
-        <input type="text" name="username" required><br><br>
 
-        <label for="password">Password:</label>
-        <input type="password" name="password" required><br><br>
+    <!-- Registration Form -->
+    <form method="POST" action="{{ url_for('register') }}">
+        <!-- Username -->
+        <div>
+            <label for="username">Username:</label><br>
+            <input type="text" id="username" name="username" placeholder="Choose a username" required>
+        </div>
+        <br>
+
+        <!-- Email -->
+        <div>
+            <label for="email">Email (optional):</label><br>
+            <input type="email" id="email" name="email" placeholder="you@example.com">
+        </div>
+        <br>
+
+        <!-- Password -->
+        <div>
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password" placeholder="Enter a strong password" required>
+        </div>
+        <br>
 
         <input type="submit" value="Register">
     </form>
-    <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+
+    <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
 </body>
 </html>

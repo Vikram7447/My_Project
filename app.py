@@ -94,7 +94,7 @@ def contact():
 @login_required
 def journal():
     entries = session.query(JournalEntry).filter_by(user_id=current_user.id)\
-        .order_by(JournalEntry.created_at.desc()).all()
+        .order_by(JournalEntry.timestamp.desc()).all()
     return render_template('journal.html', entries=entries)
 
 @app.route('/new_journal', methods=['GET', 'POST'])
@@ -149,6 +149,12 @@ def chatbot():
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     Session.remove()
+
+@app.route('/mood_tracker')
+@login_required
+def mood_tracker():
+    return render_template('mood_tracker.html')
+
 
 # ---------------- MAIN ----------------
 

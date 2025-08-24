@@ -1,10 +1,12 @@
-from flask import Flask, render_template, redirect, url_for, request, flash
+from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import scoped_session, sessionmaker
 from models.database import Base, engine, JournalEntry, User
 from utils.helpers import get_current_timestamp, sanitize_input
-from chatbot.chatbot_engine import get_bot_response
+from chatbot.chatbot_engine import get_chatbot_response
+from chatbot import chatbot_engine
+
 import os
 
 # Flask app setup
@@ -135,15 +137,33 @@ def delete_entry(entry_id):
     return redirect(url_for('journal'))
 
 # ---------------- Chatbot Route ----------------
-
-@app.route('/chatbot', methods=['GET', 'POST'])
+# Chatbot API route (AJAX communication)
+@app.route('/chatbot_api', methods=['POST'])
 @login_required
-def chatbot():
-    bot_response = None
-    if request.method == 'POST':
-        user_input = sanitize_input(request.form['user_input'])
-        bot_response = get_bot_response(user_input)
-    return render_template('chatbot.html', bot_response=bot_response)
+def chatbot_api():
+    try:
+        data = request.get_json(force=True)  # ✅ safely parse JSON
+        user_message = data.get('message') if data else None
+
+        if not user_message:
+            return jsonify({'error': 'No message received'}), 400
+
+        bot_response = get_chatbot_response(user_message)
+        return jsonify({'response': bot_response})
+
+    except Exception as e:
+        print("Chatbot API Error:", e)  # log in server console
+        return jsonify({'error': 'Server error'}), 500
+ 
+
+# Chatbot UI route (renders HTML page)
+@app.route('/chatbot', methods=['GET'])
+@login_required
+def chatbot_ui():
+    return render_template('chatbot.html')
+
+
+
 
 # ---------------- Cleanup ----------------
 @app.teardown_appcontext
@@ -154,6 +174,10 @@ def shutdown_session(exception=None):
 @login_required
 def mood_tracker():
     return render_template('mood_tracker.html')
+# --------------new---------
+from flask import Flask, render_template, request
+from chatbot import chatbot_engine  # ✅ import
+
 
 
 # ---------------- MAIN ----------------

@@ -45,7 +45,7 @@
             margin-right: auto;
         }
 
-        form {
+        .input-area {
             display: flex;
             gap: 10px;
         }
@@ -82,28 +82,67 @@
     <nav>
         <a href="/">Home</a> |
         <a href="/journal">Journal</a> |
-        <a href="/chatbot">Chatbot</a> |
+        <a href="{{ url_for('chatbot_ui') }}">Chatbot</a> |
         <a href="/about">About</a> |
         <a href="/contact">Contact</a>
     </nav>
 
     <div class="chat-container">
         <h2>💬 Mental Health Chatbot</h2>
-        <div class="messages">
-            {% if user_input %}
-                <div class="message user-message">{{ user_input }}</div>
-            {% endif %}
 
-            {% if bot_response %}
-                <div class="message bot-message"><strong>Bot:</strong> {{ bot_response }}</div>
-            {% endif %}
+        <div class="messages" id="chatbox"></div>
+
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Type your message..." />
+            <button id="sendBtn">Send</button>
         </div>
-
-        <form method="POST">
-            <input type="text" name="user_input" placeholder="How are you feeling today?" required>
-            <button type="submit">Send</button>
-        </form>
     </div>
+
+    <script>
+    function appendMessage(text, sender) {
+        const msgDiv = document.createElement("div");
+        msgDiv.classList.add("message", sender === "user" ? "user-message" : "bot-message");
+        msgDiv.innerHTML = text;
+        const chatbox = document.getElementById("chatbox");
+        chatbox.appendChild(msgDiv);
+        chatbox.scrollTop = chatbox.scrollHeight;
+    }
+
+    document.getElementById("sendBtn").addEventListener("click", sendMessage);
+    document.getElementById("userInput").addEventListener("keypress", function(e) {
+        if (e.key === "Enter") {
+            sendMessage();
+        }
+    });
+
+    async function sendMessage() {
+        const userMessage = document.getElementById("userInput").value.trim();
+        if (!userMessage) return;
+
+        appendMessage(userMessage, "user");
+        document.getElementById("userInput").value = "";
+
+        try {
+            const response = await fetch("/chatbot_api", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({ message: userMessage }) // ✅ form data
+            });
+
+            const data = await response.json();
+            if (data.response) {
+                appendMessage(data.response, "bot");
+            } else if (data.error) {
+                appendMessage("⚠️ " + data.error, "bot");
+            } else {
+                appendMessage("⚠️ Unexpected server response.", "bot");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            appendMessage("❌ Server error, please try again.", "bot");
+        }
+    }
+    </script>
 
 </body>
 </html>

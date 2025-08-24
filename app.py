@@ -3,15 +3,14 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import scoped_session, sessionmaker
 from models.database import Base, engine, JournalEntry, User
-from utils.helpers import get_current_timestamp, sanitize_input
-from chatbot.chatbot_engine import get_chatbot_response
-from chatbot import chatbot_engine
+from utils.helpers import sanitize_input
+from chatbot.chatbot_engine import get_chatbot_response  # now uses local Transformers model
 
 import os
 
 # Flask app setup
 app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY", "fallback_secret_key")  # Secure key from env
+app.secret_key = os.getenv("SECRET_KEY", "fallback_secret_key")
 
 # SQLAlchemy session
 session_factory = sessionmaker(bind=engine, expire_on_commit=False)
@@ -23,7 +22,6 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-# User loader
 @login_manager.user_loader
 def load_user(user_id):
     return session.get(User, int(user_id))
@@ -40,8 +38,7 @@ def register():
         username = sanitize_input(request.form['username'])
         password = request.form['password']
 
-        existing_user = session.query(User).filter_by(username=username).first()
-        if existing_user:
+        if session.query(User).filter_by(username=username).first():
             flash('Username already exists. Try another.', 'danger')
             return redirect(url_for('register'))
 
@@ -136,52 +133,42 @@ def delete_entry(entry_id):
         flash("Entry not found or access denied.", "danger")
     return redirect(url_for('journal'))
 
-# ---------------- Chatbot Route ----------------
-# Chatbot API route (AJAX communication)
+# ---------------- Chatbot Routes ----------------
+
 @app.route('/chatbot_api', methods=['POST'])
 @login_required
 def chatbot_api():
     try:
-        data = request.get_json(force=True)  # ✅ safely parse JSON
+        data = request.get_json(force=True)
         user_message = data.get('message') if data else None
 
         if not user_message:
             return jsonify({'error': 'No message received'}), 400
 
-        bot_response = get_chatbot_response(user_message)
+        bot_response = get_chatbot_response(user_message)  # now uses local model
         return jsonify({'response': bot_response})
 
     except Exception as e:
-        print("Chatbot API Error:", e)  # log in server console
+        print("Chatbot API Error:", e)
         return jsonify({'error': 'Server error'}), 500
- 
 
-# Chatbot UI route (renders HTML page)
 @app.route('/chatbot', methods=['GET'])
 @login_required
 def chatbot_ui():
     return render_template('chatbot.html')
 
-
-
+# ---------------- Mood Tracker ----------------
+@app.route('/mood_tracker')
+@login_required
+def mood_tracker():
+    return render_template('mood_tracker.html')
 
 # ---------------- Cleanup ----------------
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     Session.remove()
 
-@app.route('/mood_tracker')
-@login_required
-def mood_tracker():
-    return render_template('mood_tracker.html')
-# --------------new---------
-from flask import Flask, render_template, request
-from chatbot import chatbot_engine  # ✅ import
-
-
-
 # ---------------- MAIN ----------------
-
 if __name__ == '__main__':
     Base.metadata.create_all(bind=engine)
     app.run(debug=True)

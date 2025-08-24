@@ -5,7 +5,7 @@ import datetime
 
 Base = declarative_base()
 
-class User(Base, UserMixin):  # Added UserMixin for Flask-Login
+class User(Base, UserMixin):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
@@ -18,7 +18,6 @@ class User(Base, UserMixin):  # Added UserMixin for Flask-Login
     def __repr__(self):
         return f"<User(id={self.id}, username='{self.username}')>"
 
-
 class JournalEntry(Base):
     __tablename__ = 'journal_entries'
 
@@ -26,15 +25,15 @@ class JournalEntry(Base):
     title = Column(String(100))  # Title field
     content = Column(Text, nullable=False)
     timestamp = Column(DateTime, default=datetime.datetime.utcnow)
-    emotion = Column(String(50))  # Emotion detected by GoEmotions model
+    mood = Column(String(50))       # <-- Added mood column
+    emotion = Column(String(50))    # Emotion detected by GoEmotions model
     user_id = Column(Integer, ForeignKey('users.id'))
 
     # Relationship back to User
     user = relationship("User", back_populates="journal_entries")
 
     def __repr__(self):
-        return f"<JournalEntry(id={self.id}, title='{self.title}', emotion='{self.emotion}', user_id={self.user_id})>"
-
+        return f"<JournalEntry(id={self.id}, title='{self.title}', mood='{self.mood}', emotion='{self.emotion}', user_id={self.user_id})>"
 
 # SQLite Database
 engine = create_engine('sqlite:///journal.db', echo=False)
